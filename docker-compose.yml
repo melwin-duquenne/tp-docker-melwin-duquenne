@@ -1,0 +1,91 @@
+services:
+  back:
+    build:
+      context: ./back
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./back:/var/www/html
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "${DATABASE_URL}"
+    ports:
+      - "${PORT_BACK}"
+    networks:
+      - back-network
+      - back-db-network
+
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "${HEALTH_BACK}"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 10s
+
+
+  front:
+    build:
+      context: ./front
+      dockerfile: dev.Dockerfile
+    container_name: frontend
+    restart: always
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    ports:
+      - "${PORT_FRONT}"
+    networks:
+      - back-network
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "${HEALTH_FRONT}"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 10s
+
+
+  db:
+    image: mysql:8.0
+    container_name: bob
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - back-db-network
+
+  portainer:
+      image: portainer/portainer-ce
+      container_name: portainer
+      ports:
+        - "9000:9000"
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadminbob
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_PORT: "${PMA_PORT}"
+    ports:
+      - "${PORT_PHPADMIN}"
+    depends_on:
+      - db
+    networks:
+      - back-db-network
+networks:
+  back-network:
+    driver: bridge  # Assurez-vous que ce réseau est partagé par le backend et le frontend
+  back-db-network:
+    driver: bridge
+
+volumes:
+  db_data:
+
