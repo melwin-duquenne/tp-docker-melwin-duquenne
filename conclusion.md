@@ -88,3 +88,6 @@ Les erreurs CORS m'ont bloqué à plusieurs reprises. J'ai fini par comprendre q
 **Exposition du back-end :**
 Une des missions demandait que le front-end et le back-end soient exposés, avec un fichier settings.json généré par le back pour le front. Cependant, une autre mission stipulait que le back-end ne devait pas être exposé.
 J'ai finalement bloqué l'accès externe au back-end, mais je n'ai pas réussi à implémenter la génération du settings.json.
+
+**Docker Swarm**
+Je n'ai pas réussi à mettre en place Docker Swarm à cause d'un problème de port que je n'ai pas réussi à résoudre, même si tous les ports nécessaires étaient spécifiés et apparemment non utilisés. Je n'ai donc pas compris pourquoi cette erreur apparaissait systématiquement. Ce serait utile d'y revenir lors du prochain cours si nous avons un peu de temps, car je n'ai malheureusement trouvé aucune solution pour l'instant.

@@ -9,8 +9,6 @@ services:
       - db
     environment:
       DATABASE_URL: "${DATABASE_URL}"
-    ports:
-      - "${PORT_BACK}"
     networks:
       - back-network
       - back-db-network
